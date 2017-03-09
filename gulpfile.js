@@ -7,6 +7,13 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     del = require('del');
 
+var filePath = {
+    cssPage: './src/includes/css/page/*.css',
+    cssModules: './src/includes/css/modules/common.css',
+    jsPage: './src/includes/script/page/*.js',
+    jsModules: './src/includes/script/modules/common.js'
+}
+
 
 //這裡的task即是我們要定義這一項任務的方法，這裡的 webserver 是自行定義的任務名稱
 gulp.task('webserver', function () {
@@ -38,34 +45,34 @@ gulp.task('concatJS', function () {
 });
 
 //css壓縮
-gulp.task('minify-css', ['concatCSS'], function () {
-    return gulp.src('./dist/bundle.css')
+gulp.task('minify-css', function () {
+    return gulp.src([filePath.cssPage, filePath.cssModules])
         .pipe(cleanCSS())
         .pipe(rename(function (path) {
-            // path.basename += ".min";
+            path.basename += ".min";
             path.extname = ".css";
         }))
-        .pipe(gulp.dest('./dist/'));
+        .pipe(gulp.dest('./src/includes/css/'));
 });
 
 //js壓縮
-gulp.task('uglify', ['concatJS'] ,function () {
-    return gulp.src('./dist/bundle.js')
+gulp.task('uglify', function () {
+    return gulp.src([filePath.jsPage, filePath.jsModules])
         .pipe(uglify())
         .pipe(rename(function (path) {
-            // path.basename += ".min";
+            path.basename += ".min";
             path.extname = ".js";
         }))
-        .pipe(gulp.dest('./dist/'));
+        .pipe(gulp.dest('./src/includes/script/'));
 });
 
 //監看
 gulp.task('watch', function(){
     //監看css
-    gulp.watch('./src/includes/css/*.css', ['minify-css']);
+    gulp.watch([filePath.cssPage, filePath.cssModules], ['minify-css']);
     //監看js
-    gulp.watch('./src/includes/script/*.js', ['uglify']);
+    gulp.watch([filePath.jsPage, filePath.jsModules], ['uglify']);
 });
 
 
-gulp.task('default', ['clean', 'webserver', 'minify-css', 'uglify', 'watch']);
+gulp.task('default', ['minify-css', 'uglify', 'watch']);
