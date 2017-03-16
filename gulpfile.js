@@ -6,6 +6,7 @@ var gulp = require('gulp'),
     cleanCSS = require('gulp-clean-css'),
     uglify = require('gulp-uglify'),
     del = require('del');
+    htmlreplace = require('gulp-html-replace')
 
 var filePath = {
     cssPage: './src/includes/css/page/*.css',
